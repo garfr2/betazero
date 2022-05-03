@@ -16,16 +16,6 @@ namespace binops{
     return count;
   }
 
-  uint64_t naiveBitIndex(uint64_t x){//returns lowest
-    uint64_t pos = 0;
-    while(x&1){
-      pos++;
-      x=x>>1;
-    }
-    return pos;
-    
-  }
-
   inline uint64_t bitIndex(uint64_t x){//faster than native for 1 bit set. Returns upper limit if otherwise
     
     uint64_t sum = 0;
@@ -45,7 +35,6 @@ namespace binops{
     }
     return sum;
   }
-
 
   uint64_t bitIndexSafe(uint64_t x){
 		
@@ -68,7 +57,7 @@ namespace binops{
     return sum;
   }
 
-	uint64_t getIndecies(uint64_t x){
+	uint64_t getIndices(uint64_t x){
 		int numSetBits = countSetBits(x);
 		uint64_t sum;
 		
@@ -77,7 +66,8 @@ namespace binops{
 		}else{
 			int pos = 0;
 			while(x != 0){
-				if(x&1 == 1){
+			
+	if(x&1 == 1){
 					sum = (sum << 6) | pos;
 				}
 				x = x>>1;
@@ -87,7 +77,7 @@ namespace binops{
 		return (sum<<6) | numSetBits;
 	}
 
-uint64_t getIndeciesNaive(uint64_t x){
+	uint64_t getIndicesNaive(uint64_t x){
 		int numSetBits = countSetBits(x);
 		uint64_t sum = 0;
 			int pos = 0;
@@ -102,13 +92,14 @@ uint64_t getIndeciesNaive(uint64_t x){
 	}
 
 
+
   uint64_t testBitIndex(){
     int avg = 0;
     for(int i = 0;i<64;i++){
       for(int j = 0;j<64;j++){
         uint64_t test = (1ll<<i) | (1ll<<j);
-        uint64_t temp = binops::getIndecies(test);
-				std::cout << i << "," << j << " : " << temp %  64 << " , " << ((temp>>6)%64) << std::endl;
+        uint64_t temp = binops::getIndices(test);
+				std::cout << i << "," << j << " : " << ((temp>>12) %  64) << " , " << ((temp>>6)%64) << "\t" << (temp%64) << std::endl;
       }
     }
     return avg/(64*64);
@@ -134,7 +125,7 @@ uint64_t getIndeciesNaive(uint64_t x){
     
     auto stop = std::chrono::high_resolution_clock::now();
     std::cout  << avg << std::endl;
-    std::cout << "One set bit: "<< (std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() -reps)<< std::endl;
+    std::cout << "One set bit: "<< (std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count())<< std::endl;
 
 
     //Test func 2
@@ -155,7 +146,21 @@ uint64_t getIndeciesNaive(uint64_t x){
 		
     auto stop2 = std::chrono::high_resolution_clock::now();
     std::cout << avg << std::endl;
-    std::cout << "Two set bit: "<< (std::chrono::duration_cast<std::chrono::microseconds>(stop2 - start2).count() -reps)<< std::endl;
+    std::cout << "Two set bit: "<< (std::chrono::duration_cast<std::chrono::microseconds>(stop2 - start2).count())<< std::endl;
     
   }
+
+
+	//Piece moves
+	
+
+  	uint64_t kingMove(uint64_t index){
+		uint64_t k = 0b1110000011100000111;
+		if(index >= 9){
+			return k<<(index-9);
+		}else{
+			return k>>(9-index);
+		}
+	}
+
 }
