@@ -152,15 +152,36 @@ namespace binops{
 
 
 	//Piece moves
-	
 
-  	uint64_t kingMove(uint64_t index){
-		uint64_t k = 0b1110000011100000111;
+	uint64_t boundMask(uint64_t col){
+		if(col >= 6){
+			return 0xfdfdfdfdfdfdfdfd;
+		}else if(col <= 2){
+			return 0x3f3f3f3f3f3f3f3f;
+		}else{
+			return 0xffffffffffffffff;
+		}
+
+	}	
+
+    uint64_t kingMove(uint64_t index){
+		uint64_t k = 0b1110000010100000111;
 		if(index >= 9){
-			return k<<(index-9);
+			return (k<<(index-9));
 		}else{
 			return k>>(9-index);
 		}
 	}
+
+  uint64_t knightMove(uint64_t index){
+    uint64_t n = 0b10100001000100000000000100010000101;
+    if(index >=17){
+      return n<<(index-17);
+    }else{
+      return n>>(17-index);
+    }
+  }
+  
+
 
 }
