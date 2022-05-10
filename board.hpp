@@ -1,3 +1,5 @@
+#include <functional>
+
 #include "bitboard.hpp"
 
 #define BB_PER_BOARD 12
@@ -28,6 +30,9 @@ public:
     {
         return *(&boards[(int) team * 6 + (int) piece]);
     }
+
+    void generate_moves(Team team, std::function<void(BitBoard, Board)>);
+    void score(int *white, int *black);
 
     Board();
 };
