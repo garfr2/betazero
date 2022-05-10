@@ -1,7 +1,6 @@
 #include <cstdlib>
-
+#include "binops.cpp"
 #include <iostream>
-
 #include "board.hpp"
 
 void callback(BitBoard move, Board new_board)
@@ -23,8 +22,6 @@ int main()
 
     std::cout << "White Score: " << white << std::endl;
     std::cout << "Black Score: " << black << std::endl;
-
-//    b.black_board.print();
 
     std::cout << "Hello world, BetaZero v0.1" << std::endl;
     return EXIT_SUCCESS;
