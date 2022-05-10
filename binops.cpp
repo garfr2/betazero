@@ -153,9 +153,9 @@ namespace binops{
 
 	//Piece moves
 
-	uint64_t boundMask(uint64_t col){
+	inline uint64_t boundMask(uint64_t col){
 		if(col >= 6){
-			return 0xfdfdfdfdfdfdfdfd;
+			return 0xfcfcfcfcfcfcfcfc;
 		}else if(col <= 2){
 			return 0x3f3f3f3f3f3f3f3f;
 		}else{
@@ -166,20 +166,97 @@ namespace binops{
 
     uint64_t kingMove(uint64_t index){
 		uint64_t k = 0b1110000010100000111;
+    int i;
 		if(index >= 9){
-			return (k<<(index-9));
+			return (k<<(index-9)) & boundMask(index-9);
 		}else{
-			return k>>(9-index);
+			return k>>(9-index) & boundMask(9-index);
 		}
 	}
 
   uint64_t knightMove(uint64_t index){
     uint64_t n = 0b10100001000100000000000100010000101;
     if(index >=17){
-      return n<<(index-17);
+      return n<<(index-17) & boundMask(index%8);
     }else{
-      return n>>(17-index);
+      return n>>(17-index) & boundMask(index%8);
     }
+  }
+
+  uint64_t floatingRookMove(uint64_t index){
+    uint64_t r = 0;
+    for(int i = 0;i<8;i++){//sweep through column
+      r = r | (1ull<<((index%8) + i*8));
+    }
+    r = r ^ (0xffull<<(8*(index/8)));
+    return r;
+  }
+
+  uint64_t rookMove(uint64_t index, uint64_t allyBoard, uint64_t enemyBoard){
+    uint64_t r = 0;
+    
+    //plus 1
+    for(int i = 1;(index+i)%8 >= (index+i-1)%8;i++){
+      if((enemyBoard>>(index+i)) & 1 == 1){
+        r = r | (1ull<<(index+i));
+        break;
+      }else if((allyBoard>>(index+i)) & 1 == 1){
+        break;
+      }else{
+        r = r | (1ull<<(index+i));
+      }
+    }
+
+    //minus 1
+    for(int i = 1;(index-i)%8 <= (index-i+1)%8;i++){
+      if((enemyBoard>>(index-i)) & 1 == 1){
+        r = r | (1ull<<(index-i));
+        break;
+      }else if((allyBoard>>(index-i)) & 1 == 1){
+        break;
+      }else{
+        r = r | (1ull << (index-i));
+      }
+    }
+
+    //plus 8
+    for(int i = 8;index+i<64;i=i+8){
+      if((enemyBoard>>(index+i)) & 1 == 1){
+        r = r | (1ull<<(index+i));
+        break;
+      }else if((allyBoard>>(index+i)) & 1 == 1){
+        break;
+      }else{
+        r = r | (1ull<<(index+i));
+      }
+    }
+
+    //minus 8
+    for(int i = 8;index>=i;i=i+8){
+      if((enemyBoard>>(index-i)) & 1 == 1){
+        r = r | (1ull<<(index-i));
+        break;
+      }else if((allyBoard>>(index-i)) & 1 == 1){
+        break;
+      }else{
+        r = r | (1ull << (index-i));
+      }
+    }
+
+    return r;
+
+  }
+
+  uint64_t naiveBishopMove(uint64_t index){
+    uint64_t b = 0;
+
+    for(int i = 1;i<4;i++){
+      b = b | (1ull<<(index + 9*i));
+      b = b | (1ull<<(index + 7*i));
+      b = b | (1ull<<(index - 9*i));
+      b = b | (1ull<<(index - 7*i));
+    }
+    return b;
   }
   
 

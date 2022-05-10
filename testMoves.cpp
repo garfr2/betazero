@@ -5,12 +5,15 @@
 int main(){
     struct BitBoard b = BitBoard();
     
-	/*for(int i = 0;i<64;i++){
-		b.bits = 1ll<<i;
+	for(int i = 0;i<64;i++){
+        b.bits = 1ull<<i;
+    	b.print();
+		std::cout<<std::endl;
+		b.bits = binops::rookMove(i,0,0);
     	b.print();
 		std::cout<<std::endl;
 
-	}*/
+	}
 
     b.bits = binops::knightMove(36);
     b.print();
