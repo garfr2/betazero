@@ -105,7 +105,7 @@ namespace binops{
     return avg/(64*64);
   }
 
-  void time(uint64_t (*f)(uint64_t),int iterations,bool clearCache=false){
+  /*void time(uint64_t (*f)(uint64_t),int iterations,bool clearCache=false){
 
     //Test func 1
     auto start = std::chrono::high_resolution_clock::now();
@@ -148,7 +148,7 @@ namespace binops{
     std::cout << avg << std::endl;
     std::cout << "Two set bit: "<< (std::chrono::duration_cast<std::chrono::microseconds>(stop2 - start2).count())<< std::endl;
     
-  }
+  }*/
 
 
 	//Piece moves
@@ -192,7 +192,7 @@ namespace binops{
     return r;
   }
 
-  uint64_t rookMove(uint64_t index, uint64_t allyBoard, uint64_t enemyBoard){
+  uint64_t rookMove(uint64_t index, uint64_t allyBoard, uint64_t enemyBoard){//smells funny
     uint64_t r = 0;
     
     //plus 1
@@ -247,15 +247,57 @@ namespace binops{
 
   }
 
-  uint64_t naiveBishopMove(uint64_t index){
+  uint64_t bishopMove(uint64_t index, uint64_t allyBoard, uint64_t enemyBoard){
     uint64_t b = 0;
 
-    for(int i = 1;i<4;i++){
-      b = b | (1ull<<(index + 9*i));
-      b = b | (1ull<<(index + 7*i));
-      b = b | (1ull<<(index - 9*i));
-      b = b | (1ull<<(index - 7*i));
+    //Plus 9
+    for(int i = 9;(index+i<64)&((index+i)%8!=0);i=i+9){
+      if((enemyBoard>>(index+i)) & 1 == 1){
+        b = b | (1ull<<(index+i));
+        break;
+      }else if((allyBoard>>(index+i)) & 1 == 1){
+        break;
+      }else{
+        b = b | (1ull << (index+i));
+      }
     }
+
+    //Minus 9
+    for(int i = 9;(index>=i)&((index-i)%8!=7);i=i+9){
+      if((enemyBoard>>(index-i)) & 1 == 1){
+        b = b | (1ull<<(index-i));
+        break;
+      }else if((allyBoard>>(index-i)) & 1 == 1){
+        break;
+      }else{
+        b = b | (1ull << (index-i));
+      }
+    }
+
+    //Plus 7
+    for(int i = 7;(index+i<64)&((index+i)%8!=7);i=i+7){
+      if((enemyBoard>>(index+i)) & 1 == 1){
+        b = b | (1ull<<(index+i));
+        break;
+      }else if((allyBoard>>(index+i)) & 1 == 1){
+        break;
+      }else{
+        b = b | (1ull << (index+i));
+      }
+    }
+
+    //Minus 7
+    for(int i = 7;(index>=i)&((index-i)%8!=0);i=i+7){
+      if((enemyBoard>>(index-i)) & 1 == 1){
+        b = b | (1ull<<(index-i));
+        break;
+      }else if((allyBoard>>(index-i)) & 1 == 1){
+        break;
+      }else{
+        b = b | (1ull << (index-i));
+      }
+    } 
+
     return b;
   }
   

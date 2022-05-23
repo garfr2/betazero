@@ -9,19 +9,19 @@ int main(){
         b.bits = 1ull<<i;
     	b.print();
 		std::cout<<std::endl;
-		b.bits = binops::rookMove(i,0,0);
+		b.bits = binops::bishopMove(i,0,0);
     	b.print();
 		std::cout<<std::endl;
 
 	}
 
-    b.bits = binops::knightMove(36);
-    b.print();
+    //b.bits = binops::knightMove(36);
+    //b.print();
 	
-	std::cout<<std::endl;
+	//std::cout<<std::endl;
 
-    b.bits = 1ll<<36;
-    b.print();
+    //b.bits = 1ll<<36;
+    //b.print();
 
     return 0;
 }
